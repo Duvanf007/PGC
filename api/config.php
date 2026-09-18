@@ -29,11 +29,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
 // ============================================================
 // CONFIGURACIÓN DE BASE DE DATOS
 // ============================================================
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'seguridad_guacheta');
-define('DB_USER', 'root');
-define('DB_PASS', '');      // Contraseña de MySQL (vacía por defecto en XAMPP)
-define('DB_PORT', '3306');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'seguridad_guacheta');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+define('DB_PORT', getenv('DB_PORT') ?: '3306');
+define('DB_SSL',  getenv('DB_SSL') !== false ? filter_var(getenv('DB_SSL'), FILTER_VALIDATE_BOOLEAN) : false);
 
 define('UPLOAD_DIR', __DIR__ . '/../uploads/');
 define('UPLOAD_URL', '../uploads/');
@@ -47,11 +48,19 @@ function db(): PDO {
     if ($pdo !== null) return $pdo;
     try {
         $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=utf8mb4';
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+        $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
-        ]);
+        ];
+
+        // Habilitar SSL si estamos en la nube (TiDB Cloud)
+        if (DB_SSL || DB_PORT == '4000') {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = true;
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+        }
+
+        $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
     } catch (PDOException $e) {
         json_error('Error de conexión a la base de datos: ' . $e->getMessage(), 500);
     }
