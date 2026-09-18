@@ -1,0 +1,21 @@
+{
+  "name": "seguridad-guacheta",
+  "version": "1.0.0",
+  "description": "Sistema de Gestión de Seguridad - Guachetá",
+  "main": "index.html",
+  "scripts": {
+    "dev": "set NODE_NO_WARNINGS=1 && npx browser-sync start --proxy \"127.0.0.1/seguridad\" --files \"**/*.html, css/*.css, js/*.js, api/*.php, img/*\"",
+    "start": "php -S localhost:8000"
+  },
+  "keywords": [
+    "php",
+    "mysql",
+    "security",
+    "guacheta"
+  ],
+  "author": "Antigravity",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^3.0.0"
+  }
+}

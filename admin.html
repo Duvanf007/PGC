@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Administrador — Seguridad Guachetá</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar" id="main-nav"></nav>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div style="padding:20px 24px;background:linear-gradient(135deg,#1a73e8,#0d47a1);color:white;text-align:center">
+      <div style="font-size:2em;margin-bottom:6px">🔑</div>
+      <div style="font-weight:700;font-size:0.95em" id="admin-name"></div>
+      <div style="font-size:0.75em;opacity:0.8;margin-top:2px">Administrador del Sistema</div>
+    </div>
+    <ul class="sidebar-nav">
+      <li><div class="sidebar-title">Administración</div></li>
+      <li><a href="#" class="active" id="lnk-rep" onclick="showTab('reportes',this)"><span class="nav-icon">📋</span> Todos los Reportes</a></li>
+      <li><a href="#" id="lnk-usr" onclick="showTab('usuarios',this)"><span class="nav-icon">👥</span> Usuarios</a></li>
+      <li><a href="#" id="lnk-est" onclick="showTab('estadisticas',this)"><span class="nav-icon">📊</span> Estadísticas</a></li>
+      <li><div class="sidebar-title">Sitio</div></li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Ver Sitio</a></li>
+      <li><a href="feed.html"><span class="nav-icon">📰</span> Feed Público</a></li>
+      <li><a href="#" onclick="AUTH.logout()"><span class="nav-icon">🚪</span> Salir</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <!-- REPORTES -->
+    <div id="tab-reportes">
+      <div class="page-header">
+        <div><h2>📋 Gestión de Reportes</h2><p>Administra todos los reportes del sistema</p></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="admin-search" class="form-control" style="width:200px;padding:8px 12px" placeholder="🔍 Buscar..." oninput="filtrarAdmin()">
+          <select id="admin-tipo" class="form-control" style="width:auto;padding:8px 12px" onchange="filtrarAdmin()">
+            <option value="">Todos los tipos</option>
+            <option value="derrumbe">Derrumbe</option>
+            <option value="incendio">Incendio</option>
+            <option value="robo">Robo</option>
+            <option value="choque">Choque</option>
+            <option value="vandalismo">Vandalismo</option>
+            <option value="violencia">Violencia</option>
+            <option value="emergencia">Emergencia</option>
+            <option value="otro">Otro</option>
+          </select>
+          <select id="admin-estado" class="form-control" style="width:auto;padding:8px 12px" onchange="filtrarAdmin()">
+            <option value="">Todos los estados</option>
+            <option value="activo">Activo</option>
+            <option value="en proceso">En proceso</option>
+            <option value="resuelto">Resuelto</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid grid-4" style="margin-bottom:24px" id="admin-stats-row"></div>
+      <div class="table-wrap">
+        <div style="padding:16px 20px;border-bottom:1px solid #e0e7ff;font-weight:700">
+          Reportes <span id="admin-count" style="font-weight:400;font-size:0.85em;color:#5f6368"></span>
+        </div>
+        <div id="tabla-admin"><div style="padding:40px;text-align:center"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- USUARIOS -->
+    <div id="tab-usuarios" style="display:none">
+      <div class="page-header"><div><h2>👥 Usuarios Registrados</h2><p>Todos los usuarios del sistema</p></div></div>
+      <div class="table-wrap"><div id="tabla-usuarios"><div style="padding:40px;text-align:center"><div class="spinner"></div></div></div></div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div id="tab-estadisticas" style="display:none">
+      <div class="page-header"><div><h2>📊 Estadísticas</h2><p>Resumen de actividad del sistema</p></div></div>
+      <div id="estadisticas-content"><div style="padding:40px;text-align:center"><div class="spinner"></div></div></div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal-bg" id="modal-edit">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>✏️ Editar Reporte</h3>
+      <button class="modal-close" onclick="cerrarModalEdit()">✕</button>
+    </div>
+    <form onsubmit="guardarEdicion(event)">
+      <input type="hidden" id="edit-id-admin">
+      <div class="form-group">
+        <label>Título *</label>
+        <input type="text" class="form-control" id="edit-titulo" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Tipo</label>
+          <select class="form-control" id="edit-tipo">
+            <option value="derrumbe">Derrumbe</option>
+            <option value="incendio">Incendio</option>
+            <option value="robo">Robo</option>
+            <option value="choque">Choque</option>
+            <option value="vandalismo">Vandalismo</option>
+            <option value="violencia">Violencia</option>
+            <option value="emergencia">Emergencia</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Gravedad</label>
+          <select class="form-control" id="edit-gravedad">
+            <option value="alta">🔴 Alta</option>
+            <option value="media">🟡 Media</option>
+            <option value="baja">🟢 Baja</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select class="form-control" id="edit-estado">
+            <option value="activo">🔴 Activo</option>
+            <option value="en proceso">🔄 En proceso</option>
+            <option value="resuelto">✅ Resuelto</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea class="form-control" id="edit-desc" rows="4"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Ubicación</label>
+        <input type="text" class="form-control" id="edit-ubicacion">
+      </div>
+      <div style="display:flex;gap:10px">
+        <button type="submit" class="btn btn-primary">💾 Guardar</button>
+        <button type="button" class="btn btn-outline" onclick="cerrarModalEdit()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  let todosReportesData = [];
+
+  AUTH.init(async (session) => {
+    if (!session) { window.location.href = 'login.html'; return; }
+    if (session.rol !== 'admin') { window.location.href = 'dashboard.html'; return; }
+    APP.renderNavbar('admin.html', session);
+    document.getElementById('admin-name').textContent = session.nombre + ' ' + session.apellido;
+    await cargarReportes();
+  });
+
+  function showTab(tab, el) {
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = 'block';
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    if (el) el.classList.add('active');
+    if (tab === 'usuarios') cargarUsuarios();
+    if (tab === 'estadisticas') cargarEstadisticas();
+  }
+
+  async function cargarReportes() {
+    todosReportesData = await REPORTES.getTodos();
+    const s = {
+      total: todosReportesData.length,
+      activos: todosReportesData.filter(r=>r.estado==='activo').length,
+      enProceso: todosReportesData.filter(r=>r.estado==='en proceso').length,
+      resueltos: todosReportesData.filter(r=>r.estado==='resuelto').length
+    };
+    document.getElementById('admin-stats-row').innerHTML = `
+      <div class="stat-card" style="border-left-color:#1a73e8"><div class="stat-icon" style="background:#e8f0fe">📋</div><div class="stat-info"><h3>${s.total}</h3><p>Total</p></div></div>
+      <div class="stat-card" style="border-left-color:#d32f2f"><div class="stat-icon" style="background:#ffebee">🔴</div><div class="stat-info"><h3>${s.activos}</h3><p>Activos</p></div></div>
+      <div class="stat-card" style="border-left-color:#f57c00"><div class="stat-icon" style="background:#fff3e0">🔄</div><div class="stat-info"><h3>${s.enProceso}</h3><p>En proceso</p></div></div>
+      <div class="stat-card" style="border-left-color:#2e7d32"><div class="stat-icon" style="background:#e8f5e9">✅</div><div class="stat-info"><h3>${s.resueltos}</h3><p>Resueltos</p></div></div>`;
+    filtrarAdmin();
+  }
+
+  function filtrarAdmin() {
+    const q = document.getElementById('admin-search').value.toLowerCase();
+    const tipo = document.getElementById('admin-tipo').value;
+    const estado = document.getElementById('admin-estado').value;
+    let lista = todosReportesData;
+    if (q) lista = lista.filter(r => r.titulo.toLowerCase().includes(q) || (r.usuario_nombre||'').toLowerCase().includes(q));
+    if (tipo) lista = lista.filter(r => r.tipo === tipo);
+    if (estado) lista = lista.filter(r => r.estado === estado);
+    document.getElementById('admin-count').textContent = `(${lista.length})`;
+    renderTablaAdmin(lista);
+  }
+
+  function renderTablaAdmin(lista) {
+    const c = document.getElementById('tabla-admin');
+    if (!lista.length) {
+      c.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><h3>Sin resultados</h3></div>`;
+      return;
+    }
+    c.innerHTML = `<table>
+      <thead><tr><th>Título</th><th>Tipo</th><th>Gravedad</th><th>Estado</th><th>Usuario</th><th>Fecha</th><th>Acciones</th></tr></thead>
+      <tbody>${lista.map(r => {
+        const tipo = APP.tipoInfo[r.tipo] || APP.tipoInfo.otro;
+        const grav = APP.gravedadInfo[r.gravedad] || APP.gravedadInfo.baja;
+        const est = r.estado === 'resuelto' ? '<span class="badge badge-green">✅ Resuelto</span>'
+          : r.estado === 'en proceso' ? '<span class="badge badge-blue">🔄 En proceso</span>'
+          : '<span class="badge badge-red">🔴 Activo</span>';
+        return `<tr>
+          <td style="max-width:180px"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.titulo}</div>${r.imagen_url ? '<span style="font-size:0.75em;color:#1a73e8">📷 Con imagen</span>':''}</td>
+          <td><span class="reporte-tipo ${tipo.cls}">${tipo.emoji} ${tipo.label}</span></td>
+          <td><span class="gravedad-badge ${grav.cls}">${grav.ico} ${grav.label}</span></td>
+          <td>${est}</td>
+          <td style="font-size:0.85em">${r.usuario_nombre||''}<br><span style="color:#9ca3af;font-size:0.82em">${r.usuario_rol||''}</span></td>
+          <td style="font-size:0.82em;color:#5f6368">${APP.formatFecha(r.fecha)}</td>
+          <td><div style="display:flex;gap:6px">
+            <button class="btn btn-outline btn-sm" onclick="abrirEdit(${r.id})">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="eliminarAdmin(${r.id})">🗑️</button>
+          </div></td>
+        </tr>`;
+      }).join('')}</tbody></table>`;
+  }
+
+  function abrirEdit(id) {
+    const r = todosReportesData.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('edit-id-admin').value = id;
+    document.getElementById('edit-titulo').value = r.titulo;
+    document.getElementById('edit-tipo').value = r.tipo;
+    document.getElementById('edit-gravedad').value = r.gravedad;
+    document.getElementById('edit-estado').value = r.estado;
+    document.getElementById('edit-desc').value = r.descripcion;
+    document.getElementById('edit-ubicacion').value = r.ubicacion || '';
+    document.getElementById('modal-edit').classList.add('open');
+  }
+  function cerrarModalEdit() { document.getElementById('modal-edit').classList.remove('open'); }
+
+  async function guardarEdicion(e) {
+    e.preventDefault();
+    const id = parseInt(document.getElementById('edit-id-admin').value);
+    const result = await REPORTES.actualizar(id, {
+      titulo: document.getElementById('edit-titulo').value,
+      tipo: document.getElementById('edit-tipo').value,
+      gravedad: document.getElementById('edit-gravedad').value,
+      estado: document.getElementById('edit-estado').value,
+      descripcion: document.getElementById('edit-desc').value,
+      ubicacion: document.getElementById('edit-ubicacion').value
+    });
+    if (result.ok) { APP.toast('Reporte actualizado', 'success'); cerrarModalEdit(); await cargarReportes(); }
+    else APP.toast(result.error, 'error');
+  }
+
+  async function eliminarAdmin(id) {
+    if (!confirm('¿Eliminar este reporte permanentemente?')) return;
+    const r = await REPORTES.eliminar(id);
+    if (r.ok) { APP.toast('Reporte eliminado', 'success'); await cargarReportes(); }
+    else APP.toast(r.error, 'error');
+  }
+
+  async function cargarUsuarios() {
+    const usuarios = await USUARIOS.listar();
+    document.getElementById('tabla-usuarios').innerHTML = `
+      <table>
+        <thead><tr><th>Usuario</th><th>Correo</th><th>Rol</th><th>Institución</th><th>Registrado</th><th>Estado</th></tr></thead>
+        <tbody>${usuarios.map(u => `
+          <tr>
+            <td><div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.3em">${u.avatar}</span><div style="font-weight:600">${u.nombre} ${u.apellido}</div></div></td>
+            <td style="font-size:0.88em;color:#5f6368">${u.email}</td>
+            <td><span class="badge ${u.rol==='admin'?'badge-red':u.rol==='institucion'?'badge-blue':'badge-green'}">${u.rol}</span></td>
+            <td style="font-size:0.88em">${u.institucion}</td>
+            <td style="font-size:0.82em;color:#5f6368">${APP.formatFecha(u.fecha_registro)}</td>
+            <td><span class="badge ${u.activo?'badge-green':'badge-red'}">${u.activo?'✅ Activo':'🚫 Inactivo'}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+
+  async function cargarEstadisticas() {
+    const data = await REPORTES.getStats();
+    if (!data) { document.getElementById('estadisticas-content').innerHTML = '<p>Error al cargar estadísticas</p>'; return; }
+    const s = data.stats;
+    const tipos = data.tipos || [];
+    const maxTipo = tipos.reduce((m,t) => Math.max(m, parseInt(t.cnt)), 1);
+
+    document.getElementById('estadisticas-content').innerHTML = `
+      <div class="grid grid-4" style="margin-bottom:28px">
+        <div class="stat-card" style="border-left-color:#1a73e8"><div class="stat-icon" style="background:#e8f0fe">📋</div><div class="stat-info"><h3>${s.total}</h3><p>Total</p></div></div>
+        <div class="stat-card" style="border-left-color:#d32f2f"><div class="stat-icon" style="background:#ffebee">🔴</div><div class="stat-info"><h3>${s.alta}</h3><p>Gravedad alta</p></div></div>
+        <div class="stat-card" style="border-left-color:#f57c00"><div class="stat-icon" style="background:#fff3e0">🟡</div><div class="stat-info"><h3>${s.media}</h3><p>Gravedad media</p></div></div>
+        <div class="stat-card" style="border-left-color:#2e7d32"><div class="stat-icon" style="background:#e8f5e9">🟢</div><div class="stat-info"><h3>${s.baja}</h3><p>Gravedad baja</p></div></div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card-header">📊 Por tipo de incidente</div>
+          <div class="card-body">
+            ${tipos.map(t => {
+              const info = APP.tipoInfo[t.tipo] || APP.tipoInfo.otro;
+              const pct = Math.round(parseInt(t.cnt) / maxTipo * 100);
+              return `<div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.9em">
+                  <span>${info.emoji} ${info.label}</span><span style="font-weight:700">${t.cnt}</span>
+                </div>
+                <div style="height:8px;background:#e0e7ff;border-radius:4px">
+                  <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#1a73e8,#0d47a1);border-radius:4px"></div>
+                </div></div>`;
+            }).join('') || '<p style="color:#9ca3af">Sin datos</p>'}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">📈 Por estado</div>
+          <div class="card-body">
+            ${[['activo',s.activos,'#d32f2f'],['en proceso',s.enProceso,'#f57c00'],['resuelto',s.resueltos,'#2e7d32']].map(([est,cnt,color]) => {
+              const pct = s.total ? Math.round(cnt/s.total*100) : 0;
+              return `<div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:0.9em">
+                  <span style="text-transform:capitalize">${est}</span><span style="font-weight:700">${cnt} (${pct}%)</span>
+                </div>
+                <div style="height:8px;background:#e0e7ff;border-radius:4px">
+                  <div style="height:100%;width:${pct}%;background:${color};border-radius:4px"></div>
+                </div></div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  document.getElementById('modal-edit').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalEdit();
+  });
+</script>
+</body>
+</html>

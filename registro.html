@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Cuenta — Seguridad Guachetá</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="shield-big">👤</div>
+      <h2>Crear Cuenta</h2>
+      <p>Únete al Sistema de Seguridad de Guachetá</p>
+    </div>
+    <div id="msg-error" class="error-msg"></div>
+    <div id="msg-success" class="success-msg"></div>
+    <form id="form-registro" onsubmit="handleRegistro(event)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group">
+          <label>Nombre *</label>
+          <input type="text" id="nombre" class="form-control" required placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label>Apellido *</label>
+          <input type="text" id="apellido" class="form-control" required placeholder="Tu apellido">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Correo Electrónico *</label>
+        <input type="email" id="email" class="form-control" required placeholder="correo@ejemplo.com">
+      </div>
+      <div class="form-group">
+        <label>Contraseña *</label>
+        <input type="password" id="password" class="form-control" required placeholder="Mínimo 6 caracteres" minlength="6">
+      </div>
+      <div class="form-group">
+        <label>Confirmar Contraseña *</label>
+        <input type="password" id="password2" class="form-control" required placeholder="Repite tu contraseña">
+      </div>
+      <div class="form-group" style="display:flex;align-items:flex-start;gap:10px;margin-top:4px">
+        <input type="checkbox" id="terms" required style="margin-top:3px;accent-color:#1a73e8;width:16px;height:16px;flex-shrink:0">
+        <label for="terms" style="font-size:0.85em;color:#5f6368;font-weight:400;cursor:pointer">
+          Acepto los términos del servicio y me comprometo a usar esta plataforma de forma responsable y veraz.
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-reg">Crear Cuenta</button>
+    </form>
+    <div class="auth-links" style="margin-top:20px">
+      ¿Ya tienes cuenta? <a href="login.html">Iniciar Sesión</a>
+      &nbsp;·&nbsp; <a href="index.html">← Volver al inicio</a>
+    </div>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  AUTH.init(session => {
+    if (session) window.location.href = session.rol === 'admin' ? 'admin.html' : 'dashboard.html';
+  });
+
+  async function handleRegistro(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('msg-error');
+    const sucEl = document.getElementById('msg-success');
+    const btn = document.getElementById('btn-reg');
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellido = document.getElementById('apellido').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const password2 = document.getElementById('password2').value;
+
+    errEl.style.display = 'none';
+    if (password !== password2) {
+      errEl.textContent = '❌ Las contraseñas no coinciden.';
+      errEl.style.display = 'block'; return;
+    }
+
+    btn.textContent = 'Creando cuenta...';
+    btn.disabled = true;
+
+    const result = await AUTH.register({ nombre, apellido, email, password });
+    if (result.ok) {
+      sucEl.textContent = '✅ ¡Cuenta creada! Redirigiendo...';
+      sucEl.style.display = 'block';
+      setTimeout(() => window.location.href = 'dashboard.html', 900);
+    } else {
+      errEl.textContent = '❌ ' + result.error;
+      errEl.style.display = 'block';
+      btn.textContent = 'Crear Cuenta';
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>

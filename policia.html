@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policía Nacional — Seguridad Guachetá</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar" id="main-nav"></nav>
+<div class="inst-hero"><img src="img/colegio.jpeg" alt="Policía Guachetá">
+  <div class="inst-hero-content"><div class="inst-icon">👮</div><h1>Policía Nacional</h1><p>Estación de Policía Guachetá · Cundinamarca</p></div>
+</div>
+<section class="section"><div class="container">
+  <div class="grid grid-2" style="gap:28px">
+    <div>
+      <div class="info-box" style="margin-bottom:20px">
+        <h3>👮 Sobre la Estación</h3>
+        <p>La Estación de Policía de Guachetá garantiza la seguridad, convivencia y orden público. Nuestro equipo trabaja las 24 horas para proteger a los ciudadanos y responder ante cualquier emergencia.</p>
+      </div>
+      <div class="info-box" style="margin-bottom:20px;border-left-color:#d32f2f">
+        <h3>🚨 Líneas de Emergencia</h3>
+        <div class="contact-item"><span class="cicon">📞</span><div><div style="font-weight:700;font-size:1.1em;color:#d32f2f">123</div><div style="color:#5f6368;font-size:0.88em">Línea Nacional de Emergencias Policiales</div></div></div>
+        <div class="contact-item"><span class="cicon">📞</span><div><div style="font-weight:700">112</div><div style="color:#5f6368;font-size:0.88em">Emergencias Nacionales</div></div></div>
+        <div class="contact-item"><span class="cicon">📱</span><div><div style="font-weight:700">3222402473</div><div style="color:#5f6368;font-size:0.88em">Contacto directo estación</div></div></div>
+      </div>
+      <div style="background:#ffebee;border-radius:14px;padding:20px;border-left:5px solid #d32f2f">
+        <h3 style="color:#c62828;font-weight:700;margin-bottom:10px;font-size:1em">⚠️ Ante una emergencia</h3>
+        <ul style="font-size:0.9em;color:#5f6368;line-height:1.8;padding-left:18px"><li>Llama al <strong>123</strong></li><li>Indica tu ubicación exacta</li><li>Reporta también en esta plataforma</li></ul>
+      </div>
+    </div>
+    <div>
+      <div class="info-box" style="margin-bottom:20px;border-left-color:#1a73e8">
+        <h3>📞 Contacto Institucional</h3>
+        <div class="contact-item"><span class="cicon">📱</span><div><div style="font-weight:600">Estación</div><div style="color:#5f6368">3222402473</div></div></div>
+        <div class="contact-item"><span class="cicon">📧</span><div><div style="font-weight:600">Correo</div><div style="color:#5f6368">policia@guacheta.gov.co</div></div></div>
+        <div class="contact-item"><span class="cicon">📍</span><div><div style="font-weight:600">Dirección</div><div style="color:#5f6368">Carrera 4 #5-10, Guachetá</div></div></div>
+        <div class="contact-item"><span class="cicon">🕐</span><div><div style="font-weight:600">Disponibilidad</div><div style="color:#5f6368">24 horas / 7 días</div></div></div>
+      </div>
+      <div class="info-box"><h3>📢 Reportes Recientes de Policía</h3><div id="reportes-inst"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+  <div style="margin-top:40px">
+    <h2 style="margin-bottom:20px;font-size:1.4em;font-weight:800">🛡️ Servicios y Programas</h2>
+    <div class="grid grid-3">
+      <div class="card"><div class="card-body" style="text-align:center;padding:28px"><div style="font-size:2.5em;margin-bottom:12px">🚔</div><h3 style="font-weight:700;margin-bottom:8px">Patrullaje</h3><p style="color:#5f6368;font-size:0.9em">Recorridos permanentes para prevenir el crimen.</p></div></div>
+      <div class="card"><div class="card-body" style="text-align:center;padding:28px"><div style="font-size:2.5em;margin-bottom:12px">📝</div><h3 style="font-weight:700;margin-bottom:8px">Denuncias</h3><p style="color:#5f6368;font-size:0.9em">Recepción de denuncias por hurtos, violencia y otros delitos.</p></div></div>
+      <div class="card"><div class="card-body" style="text-align:center;padding:28px"><div style="font-size:2.5em;margin-bottom:12px">🤝</div><h3 style="font-weight:700;margin-bottom:8px">Convivencia</h3><p style="color:#5f6368;font-size:0.9em">Mediación en conflictos y programas de convivencia.</p></div></div>
+    </div>
+  </div>
+</div></section>
+<footer><div class="container"><div class="footer-bottom">© 2025 Sistema de Gestión de Seguridad — Municipio de Guachetá</div></div></footer>
+<div id="toast-container" class="toast-container"></div>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  AUTH.init(session => APP.renderNavbar('policia.html', session));
+  REPORTES.getPublicos().then(reportes => {
+    const lista = reportes.filter(r => r.nombre === 'Policía').slice(0,3);
+    const el = document.getElementById('reportes-inst');
+    el.innerHTML = lista.length
+      ? lista.map(r => {
+          const tipo = APP.tipoInfo[r.tipo]||APP.tipoInfo.otro;
+          return `<div style="padding:10px 0;border-bottom:1px solid #f0f4ff"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="reporte-tipo ${tipo.cls}" style="font-size:0.7em">${tipo.emoji} ${tipo.label}</span><span style="font-weight:600;font-size:0.9em">${r.titulo}</span></div><div style="font-size:0.8em;color:#5f6368">${APP.fechaRelativa(r.fecha)}</div></div>`;
+        }).join('')
+      : '<p style="color:#9ca3af;font-size:0.9em;text-align:center;padding:16px">No hay reportes recientes</p>';
+  });
+</script>
+</body>
+</html>

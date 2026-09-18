@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital San Judas Tadeo — Seguridad Guachetá</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar" id="main-nav"></nav>
+<div class="inst-hero"><img src="img/hospital.jpeg" alt="Hospital Guachetá">
+  <div class="inst-hero-content"><div class="inst-icon">🏥</div><h1>Hospital San Judas Tadeo</h1><p>Centro de Salud Municipal · Guachetá, Cundinamarca</p></div>
+</div>
+<section class="section"><div class="container">
+  <div class="grid grid-2" style="gap:28px">
+    <div>
+      <div class="info-box" style="margin-bottom:20px">
+        <h3>🏥 Sobre el Hospital</h3>
+        <p>El Hospital San Judas Tadeo es la principal institución de salud del municipio. Brindamos atención médica integral con servicios de urgencias, consulta externa y hospitalización. Nuestro equipo médico está comprometido con la salud de la comunidad guachetense.</p>
+      </div>
+      <div class="info-box" style="margin-bottom:20px;border-left-color:#2e7d32">
+        <h3>🩺 Servicios</h3>
+        <ul><li>Urgencias y emergencias (24/7)</li><li>Consulta médica general</li><li>Odontología preventiva y curativa</li><li>Atención materna e infantil</li><li>Vacunación · Programas de salud pública</li><li>Laboratorio clínico · Farmacia</li><li>Psicología y trabajo social</li></ul>
+      </div>
+      <div class="info-box" style="border-left-color:#f57c00">
+        <h3>🗓️ Horarios</h3>
+        <div class="contact-item"><span class="cicon">🚨</span><div><div style="font-weight:700;color:#d32f2f">Urgencias</div><div style="color:#5f6368;font-size:0.88em">24 horas / Todos los días</div></div></div>
+        <div class="contact-item"><span class="cicon">📅</span><div><div style="font-weight:600">Consulta Externa</div><div style="color:#5f6368;font-size:0.88em">Lunes a Viernes: 7:00 AM — 5:00 PM</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div style="background:linear-gradient(135deg,#ffebee,#fff);border:1px solid #ffcdd2;border-radius:14px;padding:24px;margin-bottom:20px">
+        <h3 style="color:#c62828;font-weight:700;margin-bottom:14px">🚨 Emergencias Médicas</h3>
+        <div style="font-size:2.5em;font-weight:800;color:#d32f2f;text-align:center;padding:16px;background:white;border-radius:10px;margin-bottom:14px;box-shadow:0 2px 8px rgba(211,47,47,0.15)">132</div>
+        <p style="font-size:0.88em;color:#5f6368;text-align:center">Línea de ambulancias</p>
+      </div>
+      <div class="info-box" style="margin-bottom:20px;border-left-color:#1a73e8">
+        <h3>📞 Contacto</h3>
+        <div class="contact-item"><span class="cicon">📱</span><div><div style="font-weight:600">Teléfono</div><div style="color:#5f6368">3222402473</div></div></div>
+        <div class="contact-item"><span class="cicon">📧</span><div><div style="font-weight:600">Correo</div><div style="color:#5f6368">hospital@guacheta.gov.co</div></div></div>
+        <div class="contact-item"><span class="cicon">📍</span><div><div style="font-weight:600">Dirección</div><div style="color:#5f6368">Calle 6 #4-15, Guachetá</div></div></div>
+      </div>
+      <div class="info-box"><h3>📢 Alertas Médicas Recientes</h3><div id="reportes-inst"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+  <div style="margin-top:40px">
+    <h2 style="margin-bottom:20px;font-size:1.4em;font-weight:800">💊 Programas de Salud</h2>
+    <div class="grid grid-3">
+      <div class="card"><div class="card-body" style="text-align:center;padding:28px"><div style="font-size:2.5em;margin-bottom:12px">🤱</div><h3 style="font-weight:700;margin-bottom:8px">Salud Materna</h3><p style="color:#5f6368;font-size:0.9em">Control prenatal y atención del parto para madres del municipio.</p></div></div>
+      <div class="card"><div class="card-body" style="text-align:center;padding:28px"><div style="font-size:2.5em;margin-bottom:12px">💉</div><h3 style="font-weight:700;margin-bottom:8px">Vacunación</h3><p style="color:#5f6368;font-size:0.9em">Programa de vacunación gratuita para niños y población vulnerable.</p></div></div>
+      <div class="card"><div class="card-body" style="text-align:center;padding:28px"><div style="font-size:2.5em;margin-bottom:12px">🧠</div><h3 style="font-weight:700;margin-bottom:8px">Salud Mental</h3><p style="color:#5f6368;font-size:0.9em">Atención psicológica y programas de bienestar mental.</p></div></div>
+    </div>
+  </div>
+</div></section>
+<footer><div class="container"><div class="footer-bottom">© 2025 Sistema de Gestión de Seguridad — Municipio de Guachetá</div></div></footer>
+<div id="toast-container" class="toast-container"></div>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  AUTH.init(session => APP.renderNavbar('hospital.html', session));
+  REPORTES.getPublicos().then(reportes => {
+    const lista = reportes.filter(r => r.tipo === 'emergencia').slice(0,3);
+    const el = document.getElementById('reportes-inst');
+    el.innerHTML = lista.length
+      ? lista.map(r => {
+          const tipo = APP.tipoInfo[r.tipo]||APP.tipoInfo.otro;
+          return `<div style="padding:10px 0;border-bottom:1px solid #f0f4ff"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="reporte-tipo ${tipo.cls}" style="font-size:0.7em">${tipo.emoji} ${tipo.label}</span><span style="font-weight:600;font-size:0.9em">${r.titulo}</span></div><div style="font-size:0.8em;color:#5f6368">${APP.fechaRelativa(r.fecha)}</div></div>`;
+        }).join('')
+      : '<p style="color:#9ca3af;font-size:0.9em;text-align:center;padding:16px">No hay alertas recientes</p>';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feed de Reportes — Seguridad Guachetá</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar" id="main-nav"></nav>
+
+<div style="background:linear-gradient(135deg,#0d47a1,#1a73e8);padding:36px 0;color:white;text-align:center">
+  <div class="container">
+    <h1 style="font-size:2em;font-weight:800;margin-bottom:8px">📋 Reportes de la Comunidad</h1>
+    <p style="opacity:0.85">Todos los incidentes reportados públicamente por los ciudadanos de Guachetá</p>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div style="background:white;border-bottom:1px solid #e0e7ff;position:sticky;top:68px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.05)">
+  <div class="container" style="padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span style="font-weight:600;font-size:0.9em;color:#374151">Filtrar:</span>
+    <select id="filtro-tipo" class="form-control" style="width:auto;padding:8px 12px" onchange="aplicarFiltros()">
+      <option value="">Todos los tipos</option>
+      <option value="derrumbe">⛰️ Derrumbe</option>
+      <option value="incendio">🔥 Incendio</option>
+      <option value="robo">🚨 Robo</option>
+      <option value="choque">🚗 Choque</option>
+      <option value="vandalismo">🚫 Vandalismo</option>
+      <option value="violencia">⚠️ Violencia</option>
+      <option value="emergencia">🏥 Emergencia</option>
+      <option value="otro">📋 Otro</option>
+    </select>
+    <select id="filtro-gravedad" class="form-control" style="width:auto;padding:8px 12px" onchange="aplicarFiltros()">
+      <option value="">Todas las gravedades</option>
+      <option value="alta">🔴 Alta</option>
+      <option value="media">🟡 Media</option>
+      <option value="baja">🟢 Baja</option>
+    </select>
+    <input type="text" id="filtro-buscar" class="form-control" style="width:220px;padding:8px 12px" placeholder="🔍 Buscar..." oninput="aplicarFiltros()">
+    <button class="btn btn-outline btn-sm" onclick="limpiarFiltros()">✕ Limpiar</button>
+    <span id="count-result" style="margin-left:auto;font-size:0.85em;color:#5f6368"></span>
+    <div id="btn-nuevo-feed"></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div id="feed-container" class="grid grid-auto">
+      <div style="grid-column:1/-1;text-align:center;padding:40px"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-bottom">© 2025 Sistema de Gestión de Seguridad — Municipio de Guachetá</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-reporte">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📢 Crear Nuevo Reporte</h3>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <form id="form-reporte" onsubmit="enviarReporte(event)">
+      <div class="form-group">
+        <label>Título *</label>
+        <input type="text" class="form-control" id="r-titulo" required placeholder="Ej: Derrumbe en vía principal">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group">
+          <label>Tipo *</label>
+          <select class="form-control" id="r-tipo" required>
+            <option value="">Seleccionar...</option>
+            <option value="derrumbe">⛰️ Derrumbe</option>
+            <option value="incendio">🔥 Incendio</option>
+            <option value="robo">🚨 Robo</option>
+            <option value="choque">🚗 Choque</option>
+            <option value="vandalismo">🚫 Vandalismo</option>
+            <option value="violencia">⚠️ Violencia</option>
+            <option value="emergencia">🏥 Emergencia médica</option>
+            <option value="otro">📋 Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Gravedad *</label>
+          <select class="form-control" id="r-gravedad" required>
+            <option value="">Seleccionar...</option>
+            <option value="alta">🔴 Alta</option>
+            <option value="media">🟡 Media</option>
+            <option value="baja">🟢 Baja</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Ubicación</label>
+        <input type="text" class="form-control" id="r-ubicacion" placeholder="Ej: Calle 5 #8-32">
+      </div>
+      <div class="form-group">
+        <label>Descripción *</label>
+        <textarea class="form-control" id="r-descripcion" required placeholder="Describe el incidente..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Fotografía (opcional)</label>
+        <div class="upload-area" onclick="document.getElementById('r-img').click()">
+          <div class="upload-icon">📷</div>
+          <p>Haz clic para subir una imagen</p>
+        </div>
+        <input type="file" id="r-img" accept="image/*" style="display:none" onchange="previewImg(event)">
+        <div class="upload-preview" id="img-preview"></div>
+      </div>
+      <button type="submit" id="btn-pub" class="btn btn-primary btn-full btn-lg">📢 Publicar Reporte</button>
+    </form>
+  </div>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  let currentSession = null;
+  let allReportes = [];
+  let imgFile = null;
+
+  AUTH.init(async (session) => {
+    currentSession = session;
+    APP.renderNavbar('feed.html', session);
+    if (session) {
+      document.getElementById('btn-nuevo-feed').innerHTML = `<button class="btn btn-primary btn-sm" onclick="abrirModal()">+ Nuevo Reporte</button>`;
+    }
+    await cargarFeed();
+  });
+
+  async function cargarFeed() {
+    allReportes = await REPORTES.getPublicos();
+    aplicarFiltros();
+  }
+
+  function aplicarFiltros() {
+    const tipo = document.getElementById('filtro-tipo').value;
+    const grav = document.getElementById('filtro-gravedad').value;
+    const buscar = document.getElementById('filtro-buscar').value.toLowerCase();
+    let f = allReportes;
+    if (tipo)   f = f.filter(r => r.tipo === tipo);
+    if (grav)   f = f.filter(r => r.gravedad === grav);
+    if (buscar) f = f.filter(r =>
+      r.titulo.toLowerCase().includes(buscar) ||
+      r.descripcion.toLowerCase().includes(buscar) ||
+      (r.ubicacion||'').toLowerCase().includes(buscar)
+    );
+    document.getElementById('count-result').textContent = `${f.length} resultado(s)`;
+    const c = document.getElementById('feed-container');
+    if (!f.length) {
+      c.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📭</div><h3>Sin resultados</h3><p>Prueba con otros filtros</p></div>`;
+      return;
+    }
+    c.innerHTML = f.map(r => APP.renderReporteCard(r)).join('');
+  }
+
+  function limpiarFiltros() {
+    document.getElementById('filtro-tipo').value = '';
+    document.getElementById('filtro-gravedad').value = '';
+    document.getElementById('filtro-buscar').value = '';
+    aplicarFiltros();
+  }
+
+  function abrirModal() {
+    if (!currentSession) { window.location.href='login.html'; return; }
+    document.getElementById('modal-reporte').classList.add('open');
+  }
+  function cerrarModal() {
+    document.getElementById('modal-reporte').classList.remove('open');
+    document.getElementById('form-reporte').reset();
+    document.getElementById('img-preview').innerHTML = '';
+    imgFile = null;
+  }
+  function previewImg(e) {
+    imgFile = e.target.files[0];
+    if (!imgFile) return;
+    const reader = new FileReader();
+    reader.onload = ev => document.getElementById('img-preview').innerHTML = `<img src="${ev.target.result}">`;
+    reader.readAsDataURL(imgFile);
+  }
+  async function enviarReporte(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-pub');
+    btn.textContent = 'Publicando...';
+    btn.disabled = true;
+    const r = await REPORTES.crear({
+      titulo: document.getElementById('r-titulo').value,
+      tipo: document.getElementById('r-tipo').value,
+      gravedad: document.getElementById('r-gravedad').value,
+      ubicacion: document.getElementById('r-ubicacion').value,
+      descripcion: document.getElementById('r-descripcion').value
+    }, imgFile);
+    if (r.ok) {
+      cerrarModal();
+      APP.toast('¡Reporte publicado!', 'success');
+      await cargarFeed();
+    } else {
+      APP.toast(r.error || 'Error al publicar', 'error');
+    }
+    btn.textContent = '📢 Publicar Reporte';
+    btn.disabled = false;
+  }
+  document.getElementById('modal-reporte').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModal();
+  });
+</script>
+</body>
+</html>

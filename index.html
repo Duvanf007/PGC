@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguridad Guachetá — Sistema de Gestión de Seguridad</title>
+  <meta name="description" content="Sistema de gestión de seguridad del municipio de Guachetá. Reporta incidentes y mantente informado.">
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar" id="main-nav"></nav>
+
+<!-- HERO SLIDER -->
+<section class="hero">
+  <div class="hero-slider">
+    <div class="hero-slide active">
+      <img src="img/hospital.jpeg" alt="Hospital de Guachetá">
+      <div class="hero-content">
+        <h1>🛡️ Seguridad, Vigilancia e Innovación</h1>
+        <p>Municipio de Guachetá — Comunidad informada, comunidad protegida</p>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <img src="img/iglesia.jpeg" alt="Iglesia de Guachetá">
+      <div class="hero-content">
+        <h1>📋 Reporta Incidentes en Tiempo Real</h1>
+        <p>Tu información ayuda a mantener seguro nuestro municipio</p>
+      </div>
+    </div>
+    <div class="hero-slide">
+      <img src="img/colegio.jpeg" alt="Colegio de Guachetá">
+      <div class="hero-content">
+        <h1>🤝 Unidos por la Seguridad de Guachetá</h1>
+        <p>Alcaldía, Policía y Hospital trabajando juntos por ti</p>
+      </div>
+    </div>
+  </div>
+  <button class="hero-nav prev" onclick="prevSlide()">&#8249;</button>
+  <button class="hero-nav next" onclick="nextSlide()">&#8250;</button>
+</section>
+
+<div class="title-bar">Seguridad Vigilancia e Innovación en Guachetá</div>
+
+<!-- PANEL REPORTE -->
+<section style="background:#f0f4ff;padding:40px 0">
+  <div class="container">
+    <div class="page-header">
+      <div><h2>📢 Reportar Incidente</h2><p>Comparte lo que está sucediendo en tu comunidad</p></div>
+    </div>
+    <div id="report-panel"></div>
+  </div>
+</section>
+
+<!-- COLUMNAS INFO -->
+<section class="section">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card"><div class="card-body" style="text-align:center;padding:32px">
+        <div style="font-size:3em;margin-bottom:14px">🛡️</div>
+        <h3 style="font-size:1.2em;font-weight:700;margin-bottom:10px">Somos</h3>
+        <p style="color:#5f6368;line-height:1.7;font-size:0.93em">Una plataforma web para regular y reportar los accidentes e incidentes que suceden en el municipio de Guachetá, proporcionando información de la comunidad para la comunidad.</p>
+      </div></div>
+      <div class="card"><div class="card-body" style="text-align:center;padding:32px">
+        <div style="font-size:3em;margin-bottom:14px">🎯</div>
+        <h3 style="font-size:1.2em;font-weight:700;margin-bottom:10px">Especialidades</h3>
+        <p style="color:#5f6368;line-height:1.7;font-size:0.93em">Nos especializamos en monitorear y analizar actividades para identificar amenazas, riesgos y comportamientos sospechosos, conectando a la ciudadanía con las autoridades.</p>
+      </div></div>
+      <div class="card"><div class="card-body" style="text-align:center;padding:32px">
+        <div style="font-size:3em;margin-bottom:14px">📞</div>
+        <h3 style="font-size:1.2em;font-weight:700;margin-bottom:10px">Contáctanos</h3>
+        <p style="color:#5f6368;line-height:1.7;font-size:0.93em">Líneas de emergencia: <strong>3222402473</strong> o <strong>3124592915</strong>. También puedes comunicarte con la Alcaldía, Policía u Hospital directamente.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTITUCIONES -->
+<section style="background:linear-gradient(135deg,#0d47a1,#1a73e8);padding:50px 0">
+  <div class="container" style="text-align:center">
+    <h2 style="color:white;font-size:1.8em;font-weight:800;margin-bottom:10px">Instituciones del Municipio</h2>
+    <p style="color:rgba(255,255,255,0.8);margin-bottom:32px">Conoce más sobre las entidades que velan por tu seguridad y bienestar</p>
+    <div class="grid grid-3">
+      <a href="alcaldia.html" class="card" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);backdrop-filter:blur(8px);text-decoration:none">
+        <div class="card-body" style="text-align:center;padding:32px;color:white">
+          <div style="font-size:3em;margin-bottom:12px">🏛️</div>
+          <h3 style="font-weight:700;margin-bottom:8px">Alcaldía</h3>
+          <p style="opacity:0.8;font-size:0.9em">Alcaldía de Guachetá</p>
+          <div style="margin-top:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:8px 16px;font-size:0.85em;font-weight:600">Ver información →</div>
+        </div>
+      </a>
+      <a href="policia.html" class="card" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);backdrop-filter:blur(8px);text-decoration:none">
+        <div class="card-body" style="text-align:center;padding:32px;color:white">
+          <div style="font-size:3em;margin-bottom:12px">👮</div>
+          <h3 style="font-weight:700;margin-bottom:8px">Policía Nacional</h3>
+          <p style="opacity:0.8;font-size:0.9em">Estación Policía Guachetá</p>
+          <div style="margin-top:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:8px 16px;font-size:0.85em;font-weight:600">Ver información →</div>
+        </div>
+      </a>
+      <a href="hospital.html" class="card" style="background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);backdrop-filter:blur(8px);text-decoration:none">
+        <div class="card-body" style="text-align:center;padding:32px;color:white">
+          <div style="font-size:3em;margin-bottom:12px">🏥</div>
+          <h3 style="font-weight:700;margin-bottom:8px">Hospital</h3>
+          <p style="opacity:0.8;font-size:0.9em">Hospital San Judas Tadeo</p>
+          <div style="margin-top:16px;background:rgba(255,255,255,0.2);border-radius:8px;padding:8px 16px;font-size:0.85em;font-weight:600">Ver información →</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTES RECIENTES -->
+<section class="section">
+  <div class="container">
+    <div class="page-header">
+      <div><h2>📋 Reportes Recientes</h2><p>Últimos incidentes reportados por la comunidad</p></div>
+      <a href="feed.html" class="btn btn-primary">Ver todos →</a>
+    </div>
+    <div id="recent-reports" class="grid grid-auto">
+      <div style="grid-column:1/-1;text-align:center;padding:40px"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>🛡️ Seguridad Guachetá</h4>
+        <p>Sistema de Gestión de Seguridad del municipio de Guachetá, Cundinamarca.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Links Rápidos</h4>
+        <a href="feed.html" style="display:block">📋 Reportes públicos</a>
+        <a href="alcaldia.html" style="display:block">🏛️ Alcaldía</a>
+        <a href="policia.html" style="display:block">👮 Policía</a>
+        <a href="hospital.html" style="display:block">🏥 Hospital</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <p>📞 3222402473<br>📞 3124592915<br>📍 Guachetá, Cundinamarca</p>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Sistema de Gestión de Seguridad — Municipio de Guachetá</div>
+  </div>
+</footer>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal-reporte">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📢 Crear Nuevo Reporte</h3>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <form id="form-reporte" onsubmit="enviarReporte(event)">
+      <div class="form-group">
+        <label>Título del Reporte *</label>
+        <input type="text" class="form-control" id="r-titulo" required placeholder="Ej: Derrumbe en vía principal">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group">
+          <label>Tipo *</label>
+          <select class="form-control" id="r-tipo" required>
+            <option value="">Seleccionar...</option>
+            <option value="derrumbe">⛰️ Derrumbe</option>
+            <option value="incendio">🔥 Incendio</option>
+            <option value="robo">🚨 Robo</option>
+            <option value="choque">🚗 Choque</option>
+            <option value="vandalismo">🚫 Vandalismo</option>
+            <option value="violencia">⚠️ Violencia</option>
+            <option value="emergencia">🏥 Emergencia médica</option>
+            <option value="otro">📋 Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Gravedad *</label>
+          <select class="form-control" id="r-gravedad" required>
+            <option value="">Seleccionar...</option>
+            <option value="alta">🔴 Alta</option>
+            <option value="media">🟡 Media</option>
+            <option value="baja">🟢 Baja</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Ubicación</label>
+        <input type="text" class="form-control" id="r-ubicacion" placeholder="Ej: Calle 5 #8-32">
+      </div>
+      <div class="form-group">
+        <label>Descripción *</label>
+        <textarea class="form-control" id="r-descripcion" required placeholder="Describe con detalle el incidente..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Fotografía (opcional)</label>
+        <div class="upload-area" onclick="document.getElementById('r-imagen').click()">
+          <div class="upload-icon">📷</div>
+          <p>Haz clic para subir una imagen</p>
+          <p style="font-size:0.8em;margin-top:4px">JPG, PNG o GIF — Máx 5MB</p>
+        </div>
+        <input type="file" id="r-imagen" accept="image/*" style="display:none" onchange="previewImagen(event)">
+        <div class="upload-preview" id="img-preview"></div>
+      </div>
+      <div id="modal-error" class="error-msg"></div>
+      <button type="submit" id="btn-submit-reporte" class="btn btn-primary btn-full btn-lg">📢 Publicar Reporte</button>
+    </form>
+  </div>
+</div>
+
+<!-- CHATBOT WIDGET -->
+<div class="chatbot-widget">
+  <div class="chat-window" id="chat-window">
+    <div class="chat-header">
+      <h3>🤖 Asistente Virtual</h3>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg bot">¡Hola! 👋 Soy el asistente de Seguridad Guachetá. ¿En qué te puedo ayudar hoy?</div>
+      <div class="typing-indicator" id="chat-typing">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <form class="chat-input-area" onsubmit="enviarMensajeChat(event)">
+      <input type="text" id="chat-input" placeholder="Escribe tu mensaje aquí..." autocomplete="off">
+      <button type="submit">➤</button>
+    </form>
+  </div>
+  <button class="chat-btn" onclick="toggleChat()">💬</button>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Hero slider
+  let slideIdx = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  function showSlide(n) {
+    slides.forEach(s => s.classList.remove('active'));
+    slideIdx = (n + slides.length) % slides.length;
+    slides[slideIdx].classList.add('active');
+  }
+  function nextSlide() { showSlide(slideIdx + 1); }
+  function prevSlide() { showSlide(slideIdx - 1); }
+  setInterval(nextSlide, 5000);
+
+  let currentSession = null;
+
+  // Inicializar página
+  AUTH.init(async (session) => {
+    currentSession = session;
+    APP.renderNavbar('index.html', session);
+
+    // Panel según sesión
+    const panel = document.getElementById('report-panel');
+    if (session) {
+      panel.innerHTML = `
+        <div style="text-align:center">
+          <p style="margin-bottom:16px;color:#5f6368">Bienvenido/a, <strong>${session.nombre}</strong>. Comparte lo que está pasando.</p>
+          <button class="btn btn-primary btn-lg" onclick="abrirModal()">📢 Crear Nuevo Reporte</button>
+          <a href="${session.rol === 'admin' ? 'admin.html' : 'dashboard.html'}" class="btn btn-outline btn-lg" style="margin-left:12px">📁 Mi Panel</a>
+        </div>`;
+    } else {
+      panel.innerHTML = `
+        <div style="text-align:center;background:white;border-radius:14px;padding:32px;box-shadow:0 4px 24px rgba(26,115,232,0.1)">
+          <div style="font-size:2.5em;margin-bottom:12px">🔐</div>
+          <h3 style="margin-bottom:8px">¿Tienes algo que reportar?</h3>
+          <p style="color:#5f6368;margin-bottom:20px">Inicia sesión o crea una cuenta para publicar reportes</p>
+          <a href="login.html" class="btn btn-primary btn-lg">Iniciar Sesión</a>
+          <a href="registro.html" class="btn btn-outline btn-lg" style="margin-left:12px">Crear Cuenta</a>
+        </div>`;
+    }
+
+    await cargarRecientes();
+  });
+
+  async function cargarRecientes() {
+    const container = document.getElementById('recent-reports');
+    try {
+      const reportes = await REPORTES.getPublicos();
+      const slice = reportes.slice(0, 3);
+      if (slice.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📭</div><h3>No hay reportes aún</h3></div>`;
+        return;
+      }
+      container.innerHTML = slice.map(r => APP.renderReporteCard(r)).join('');
+    } catch(e) {
+      container.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">⚠️</div><h3>Error al cargar reportes</h3><p>Verifica que el servidor XAMPP esté activo</p></div>`;
+    }
+  }
+
+  // Modal
+  let imgFile = null;
+  function abrirModal() {
+    document.getElementById('modal-reporte').classList.add('open');
+  }
+  function cerrarModal() {
+    document.getElementById('modal-reporte').classList.remove('open');
+    document.getElementById('form-reporte').reset();
+    document.getElementById('img-preview').innerHTML = '';
+    document.getElementById('modal-error').style.display = 'none';
+    imgFile = null;
+  }
+
+  function previewImagen(e) {
+    imgFile = e.target.files[0];
+    if (!imgFile) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('img-preview').innerHTML = `<img src="${ev.target.result}">`;
+    };
+    reader.readAsDataURL(imgFile);
+  }
+
+  async function enviarReporte(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit-reporte');
+    const errEl = document.getElementById('modal-error');
+    btn.textContent = 'Publicando...';
+    btn.disabled = true;
+    errEl.style.display = 'none';
+
+    const r = await REPORTES.crear({
+      titulo:      document.getElementById('r-titulo').value,
+      tipo:        document.getElementById('r-tipo').value,
+      gravedad:    document.getElementById('r-gravedad').value,
+      ubicacion:   document.getElementById('r-ubicacion').value,
+      descripcion: document.getElementById('r-descripcion').value
+    }, imgFile);
+
+    if (r.ok) {
+      cerrarModal();
+      APP.toast('¡Reporte publicado exitosamente!', 'success');
+      await cargarRecientes();
+    } else {
+      errEl.textContent = '❌ ' + (r.error || 'Error desconocido');
+      errEl.style.display = 'block';
+    }
+    btn.textContent = '📢 Publicar Reporte';
+    btn.disabled = false;
+  }
+
+  document.getElementById('modal-reporte').addEventListener('click', function(e) {
+    if (e.target === this) cerrarModal();
+  });
+
+  // Chatbot Logic
+  function toggleChat() {
+    document.getElementById('chat-window').classList.toggle('active');
+  }
+
+  async function enviarMensajeChat(e) {
+    e.preventDefault();
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    // Agregar mensaje del usuario
+    agregarMensaje('user', msg);
+    input.value = '';
+
+    // Mostrar "Escribiendo..."
+    const typing = document.getElementById('chat-typing');
+    const messagesDiv = document.getElementById('chat-messages');
+    messagesDiv.appendChild(typing); // Mover al final
+    typing.style.display = 'flex';
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    try {
+      const res = await fetch('api/chatbot.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensaje: msg })
+      });
+      const data = await res.json();
+      typing.style.display = 'none';
+      
+      if (data.respuesta) {
+        agregarMensaje('bot', data.respuesta);
+      } else {
+        agregarMensaje('bot', 'Error: No recibí respuesta válida de la IA.');
+      }
+    } catch(err) {
+      typing.style.display = 'none';
+      agregarMensaje('bot', 'Hubo un error de conexión con el servidor.');
+    }
+  }
+
+  function agregarMensaje(sender, text) {
+    const div = document.createElement('div');
+    div.className = `chat-msg ${sender}`;
+    // Reemplazar saltos de línea y formatear un poco para negritas
+    let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    formattedText = formattedText.replace(/\n/g, '<br>');
+    div.innerHTML = formattedText;
+    
+    const messagesDiv = document.getElementById('chat-messages');
+    const typing = document.getElementById('chat-typing');
+    messagesDiv.insertBefore(div, typing);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+</script>
+</body>
+</html>

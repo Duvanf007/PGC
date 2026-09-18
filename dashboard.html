@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Panel — Seguridad Guachetá</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar" id="main-nav"></nav>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div style="padding:20px 24px;border-bottom:1px solid #e0e7ff" id="sidebar-user"></div>
+    <ul class="sidebar-nav">
+      <li><div class="sidebar-title">Mi Cuenta</div></li>
+      <li><a href="#" class="active" id="link-reportes" onclick="showTab('mis-reportes',this)"><span class="nav-icon">📋</span> Mis Reportes</a></li>
+      <li><a href="#" id="link-nuevo" onclick="showTab('nuevo-reporte',this)"><span class="nav-icon">➕</span> Nuevo Reporte</a></li>
+      <li><a href="#" onclick="showTab('mi-perfil',this)"><span class="nav-icon">👤</span> Mi Perfil</a></li>
+      <li><div class="sidebar-title">Sitio</div></li>
+      <li><a href="index.html"><span class="nav-icon">🏠</span> Inicio</a></li>
+      <li><a href="feed.html"><span class="nav-icon">📰</span> Feed Público</a></li>
+      <li><a href="#" onclick="AUTH.logout()"><span class="nav-icon">🚪</span> Cerrar Sesión</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    <!-- TAB: MIS REPORTES -->
+    <div id="tab-mis-reportes">
+      <div class="page-header">
+        <div><h2>📋 Mis Reportes</h2><p>Gestiona los reportes que has publicado</p></div>
+        <button class="btn btn-primary" onclick="showTab('nuevo-reporte',document.getElementById('link-nuevo'))">➕ Nuevo Reporte</button>
+      </div>
+      <div class="grid grid-4" style="margin-bottom:28px" id="my-stats"></div>
+      <div class="table-wrap">
+        <div style="padding:16px 20px;border-bottom:1px solid #e0e7ff;display:flex;align-items:center;gap:10px">
+          <span style="font-weight:700">Mis reportes</span>
+          <input type="text" id="search-my" class="form-control" style="width:200px;padding:7px 12px;margin-left:auto" placeholder="🔍 Buscar..." oninput="filtrarMisReportes()">
+        </div>
+        <div id="tabla-mis-reportes"><div style="padding:40px;text-align:center"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+
+    <!-- TAB: NUEVO / EDITAR REPORTE -->
+    <div id="tab-nuevo-reporte" style="display:none">
+      <div class="page-header">
+        <div><h2>➕ <span id="form-titulo-txt">Nuevo Reporte</span></h2><p id="form-sub-txt">Comparte un nuevo incidente con la comunidad</p></div>
+      </div>
+      <div class="card" style="max-width:700px">
+        <div class="card-body">
+          <form id="form-reporte-dash" onsubmit="guardarReporte(event)">
+            <input type="hidden" id="edit-id">
+            <div class="form-group">
+              <label>Título *</label>
+              <input type="text" class="form-control" id="r-titulo" required placeholder="Título del incidente">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label>Tipo *</label>
+                <select class="form-control" id="r-tipo" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="derrumbe">⛰️ Derrumbe</option>
+                  <option value="incendio">🔥 Incendio</option>
+                  <option value="robo">🚨 Robo</option>
+                  <option value="choque">🚗 Choque</option>
+                  <option value="vandalismo">🚫 Vandalismo</option>
+                  <option value="violencia">⚠️ Violencia</option>
+                  <option value="emergencia">🏥 Emergencia médica</option>
+                  <option value="otro">📋 Otro</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Gravedad *</label>
+                <select class="form-control" id="r-gravedad" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="alta">🔴 Alta</option>
+                  <option value="media">🟡 Media</option>
+                  <option value="baja">🟢 Baja</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Ubicación</label>
+              <input type="text" class="form-control" id="r-ubicacion" placeholder="Ej: Calle 5 #8-32">
+            </div>
+            <div class="form-group">
+              <label>Descripción *</label>
+              <textarea class="form-control" id="r-descripcion" required rows="5" placeholder="Describe con detalle el incidente..."></textarea>
+            </div>
+            <div class="form-group" id="img-group">
+              <label>Fotografía (opcional)</label>
+              <div class="upload-area" onclick="document.getElementById('r-imagen').click()">
+                <div class="upload-icon">📷</div>
+                <p>Haz clic para seleccionar una imagen</p>
+                <p style="font-size:0.8em">PNG, JPG — Máx 5MB</p>
+              </div>
+              <input type="file" id="r-imagen" accept="image/*" style="display:none" onchange="previewI(event)">
+              <div class="upload-preview" id="img-prev"></div>
+            </div>
+            <div id="form-error" class="error-msg"></div>
+            <div style="display:flex;gap:12px">
+              <button type="submit" class="btn btn-primary btn-lg" id="btn-guardar">💾 Publicar Reporte</button>
+              <button type="button" class="btn btn-outline" onclick="cancelarEdicion()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PERFIL -->
+    <div id="tab-mi-perfil" style="display:none">
+      <div class="page-header"><h2>👤 Mi Perfil</h2></div>
+      <div class="card" style="max-width:500px"><div class="card-body" id="perfil-info"></div></div>
+    </div>
+  </main>
+</div>
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  let session = null;
+  let misReportesData = [];
+  let imgFile = null;
+
+  AUTH.init(async (s) => {
+    if (!s) { window.location.href = 'login.html'; return; }
+    session = s;
+    APP.renderNavbar('dashboard.html', s);
+
+    document.getElementById('sidebar-user').innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#1a73e8,#0d47a1);display:flex;align-items:center;justify-content:center;font-size:1.4em">${s.avatar}</div>
+        <div><div style="font-weight:700;font-size:0.95em">${s.nombre} ${s.apellido}</div><div style="font-size:0.78em;color:#5f6368">${s.institucion}</div></div>
+      </div>`;
+
+    document.getElementById('perfil-info').innerHTML = `
+      <div style="text-align:center;padding:20px 0">
+        <div style="font-size:4em;margin-bottom:12px">${s.avatar}</div>
+        <h3 style="font-size:1.3em;font-weight:700">${s.nombre} ${s.apellido}</h3>
+        <p style="color:#5f6368;margin-top:4px">${s.email}</p>
+        <span class="badge badge-blue" style="margin-top:8px">${s.rol}</span>
+      </div>
+      <div class="divider"></div>
+      <div class="contact-item"><span class="cicon">🏛️</span><div><div style="font-size:0.8em;color:#9ca3af">Institución</div><div style="font-weight:600">${s.institucion}</div></div></div>
+      <div class="contact-item"><span class="cicon">📧</span><div><div style="font-size:0.8em;color:#9ca3af">Correo</div><div style="font-weight:600">${s.email}</div></div></div>`;
+
+    await cargarMisReportes();
+  });
+
+  function showTab(tab, el) {
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = 'block';
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    if (el) el.classList.add('active');
+    if (tab === 'mis-reportes') cargarMisReportes();
+  }
+
+  async function cargarMisReportes() {
+    misReportesData = await REPORTES.getMios();
+    const s = {
+      total: misReportesData.length,
+      alta: misReportesData.filter(r => r.gravedad === 'alta').length,
+      activos: misReportesData.filter(r => r.estado === 'activo').length,
+      resueltos: misReportesData.filter(r => r.estado === 'resuelto').length
+    };
+    document.getElementById('my-stats').innerHTML = `
+      <div class="stat-card" style="border-left-color:#1a73e8"><div class="stat-icon" style="background:#e8f0fe">📋</div><div class="stat-info"><h3>${s.total}</h3><p>Total reportes</p></div></div>
+      <div class="stat-card" style="border-left-color:#d32f2f"><div class="stat-icon" style="background:#ffebee">🔴</div><div class="stat-info"><h3>${s.alta}</h3><p>Gravedad alta</p></div></div>
+      <div class="stat-card" style="border-left-color:#f57c00"><div class="stat-icon" style="background:#fff3e0">🔄</div><div class="stat-info"><h3>${s.activos}</h3><p>Activos</p></div></div>
+      <div class="stat-card" style="border-left-color:#2e7d32"><div class="stat-icon" style="background:#e8f5e9">✅</div><div class="stat-info"><h3>${s.resueltos}</h3><p>Resueltos</p></div></div>`;
+    renderTabla(misReportesData);
+  }
+
+  function filtrarMisReportes() {
+    const q = document.getElementById('search-my').value.toLowerCase();
+    renderTabla(misReportesData.filter(r => r.titulo.toLowerCase().includes(q) || r.descripcion.toLowerCase().includes(q)));
+  }
+
+  function renderTabla(lista) {
+    const c = document.getElementById('tabla-mis-reportes');
+    if (!lista.length) {
+      c.innerHTML = `<div class="empty-state"><div class="empty-icon">📝</div><h3>No tienes reportes aún</h3><p>Crea tu primer reporte</p></div>`;
+      return;
+    }
+    c.innerHTML = `<table>
+      <thead><tr><th>Reporte</th><th>Tipo</th><th>Gravedad</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+      <tbody>
+        ${lista.map(r => {
+          const tipo = APP.tipoInfo[r.tipo] || APP.tipoInfo.otro;
+          const grav = APP.gravedadInfo[r.gravedad] || APP.gravedadInfo.baja;
+          const est = r.estado === 'resuelto' ? '<span class="badge badge-green">✅ Resuelto</span>'
+            : r.estado === 'en proceso' ? '<span class="badge badge-blue">🔄 En proceso</span>'
+            : '<span class="badge badge-red">🔴 Activo</span>';
+          return `<tr>
+            <td><div style="font-weight:600;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.titulo}</div>
+            ${r.imagen_url ? '<span style="font-size:0.75em;color:#1a73e8">📷 Con imagen</span>' : ''}</td>
+            <td><span class="reporte-tipo ${tipo.cls}">${tipo.emoji} ${tipo.label}</span></td>
+            <td><span class="gravedad-badge ${grav.cls}">${grav.ico} ${grav.label}</span></td>
+            <td>${est}</td>
+            <td style="font-size:0.82em;color:#5f6368">${APP.formatFecha(r.fecha)}</td>
+            <td><div style="display:flex;gap:6px">
+              <button class="btn btn-outline btn-sm" onclick="abrirEditar(${r.id})">✏️</button>
+              <button class="btn btn-danger btn-sm" onclick="eliminar(${r.id})">🗑️</button>
+            </div></td>
+          </tr>`;
+        }).join('')}
+      </tbody></table>`;
+  }
+
+  function abrirEditar(id) {
+    const r = misReportesData.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('edit-id').value = id;
+    document.getElementById('r-titulo').value = r.titulo;
+    document.getElementById('r-tipo').value = r.tipo;
+    document.getElementById('r-gravedad').value = r.gravedad;
+    document.getElementById('r-ubicacion').value = r.ubicacion || '';
+    document.getElementById('r-descripcion').value = r.descripcion;
+    document.getElementById('form-titulo-txt').textContent = 'Editar Reporte';
+    document.getElementById('form-sub-txt').textContent = 'Modifica los datos del reporte';
+    document.getElementById('btn-guardar').textContent = '💾 Guardar Cambios';
+    showTab('nuevo-reporte', document.getElementById('link-nuevo'));
+  }
+
+  function cancelarEdicion() {
+    document.getElementById('edit-id').value = '';
+    document.getElementById('form-reporte-dash').reset();
+    document.getElementById('img-prev').innerHTML = '';
+    document.getElementById('form-titulo-txt').textContent = 'Nuevo Reporte';
+    document.getElementById('form-sub-txt').textContent = 'Comparte un nuevo incidente con la comunidad';
+    document.getElementById('btn-guardar').textContent = '💾 Publicar Reporte';
+    imgFile = null;
+    showTab('mis-reportes', document.getElementById('link-reportes'));
+  }
+
+  function previewI(e) {
+    imgFile = e.target.files[0];
+    if (!imgFile) return;
+    const reader = new FileReader();
+    reader.onload = ev => document.getElementById('img-prev').innerHTML = `<img src="${ev.target.result}">`;
+    reader.readAsDataURL(imgFile);
+  }
+
+  async function guardarReporte(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btn-guardar');
+    const errEl = document.getElementById('form-error');
+    const id = document.getElementById('edit-id').value;
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+    errEl.style.display = 'none';
+
+    let result;
+    if (id) {
+      // Editar — sin cambio de imagen (la edición de imagen requiere multipart separado)
+      result = await REPORTES.actualizar(parseInt(id), {
+        titulo: document.getElementById('r-titulo').value,
+        tipo: document.getElementById('r-tipo').value,
+        gravedad: document.getElementById('r-gravedad').value,
+        ubicacion: document.getElementById('r-ubicacion').value,
+        descripcion: document.getElementById('r-descripcion').value
+      });
+    } else {
+      result = await REPORTES.crear({
+        titulo: document.getElementById('r-titulo').value,
+        tipo: document.getElementById('r-tipo').value,
+        gravedad: document.getElementById('r-gravedad').value,
+        ubicacion: document.getElementById('r-ubicacion').value,
+        descripcion: document.getElementById('r-descripcion').value
+      }, imgFile);
+    }
+
+    if (result.ok) {
+      APP.toast(id ? 'Reporte actualizado' : '¡Reporte publicado!', 'success');
+      cancelarEdicion();
+    } else {
+      errEl.textContent = '❌ ' + (result.error || 'Error al guardar');
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = '💾 Publicar Reporte';
+    }
+  }
+
+  async function eliminar(id) {
+    if (!confirm('¿Eliminar este reporte? Esta acción no se puede deshacer.')) return;
+    const r = await REPORTES.eliminar(id);
+    if (r.ok) { APP.toast('Reporte eliminado', 'success'); cargarMisReportes(); }
+    else APP.toast(r.error, 'error');
+  }
+</script>
+</body>
+</html>
