@@ -37,12 +37,12 @@
     <div class="divider"></div>
 
     <div style="background:#f8faff;border-radius:10px;padding:16px;font-size:0.82em;color:#5f6368;margin-bottom:16px">
-      <strong style="display:block;margin-bottom:8px;color:#374151">👥 Cuentas institucionales:</strong>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-        <div>🔑 <strong>Admin:</strong> admin@guacheta.gov.co / admin123</div>
-        <div>🏛️ <strong>Alcaldía:</strong> alcaldia@guacheta.gov.co / alcaldia123</div>
-        <div>👮 <strong>Policía:</strong> policia@guacheta.gov.co / policia123</div>
-        <div>🏥 <strong>Hospital:</strong> hospital@guacheta.gov.co / hospital123</div>
+      <strong style="display:block;margin-bottom:10px;color:#374151;text-align:center">🏛️ Acceso Institucional Rápido</strong>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <button type="button" class="btn btn-outline" style="font-size:0.85em;padding:8px" onclick="quickLogin('admin@guacheta.gov.co', 'admin123')">🔑 Admin</button>
+        <button type="button" class="btn btn-outline" style="font-size:0.85em;padding:8px" onclick="quickLogin('alcaldia@guacheta.gov.co', 'alcaldia123')">🏛️ Alcaldía</button>
+        <button type="button" class="btn btn-outline" style="font-size:0.85em;padding:8px" onclick="quickLogin('policia@guacheta.gov.co', 'policia123')">👮 Policía</button>
+        <button type="button" class="btn btn-outline" style="font-size:0.85em;padding:8px" onclick="quickLogin('hospital@guacheta.gov.co', 'hospital123')">🏥 Hospital</button>
       </div>
     </div>
 
@@ -70,6 +70,12 @@
     const eye = document.getElementById('pass-eye');
     p.type = p.type === 'password' ? 'text' : 'password';
     eye.textContent = p.type === 'password' ? '👁️' : '🙈';
+  }
+
+  function quickLogin(email, pass) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = pass;
+    document.getElementById('form-login').dispatchEvent(new Event('submit', { cancelable: true }));
   }
 
   async function handleLogin(e) {
